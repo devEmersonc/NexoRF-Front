@@ -16,6 +16,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
+import java.util.Map;
+
 public class EditUserView {
     private final UserResponseDTO userSelected;
     private final TableView<UserResponseDTO> tablaUsers;
@@ -47,13 +49,64 @@ public class EditUserView {
         Button btnGuardar = new Button("Guardar");
         GridPane.setHalignment(btnGuardar, HPos.RIGHT);
 
+        Label errorUsername = new Label();
+        errorUsername.setMaxWidth(Double.MAX_VALUE);
+        errorUsername.getStyleClass().add("error-label");
+
+        Label errorName = new Label();
+        errorName.setMaxWidth(Double.MAX_VALUE);
+        errorName.getStyleClass().add("error-label");
+
+        Label errorLastName = new Label();
+        errorLastName.setMaxWidth(Double.MAX_VALUE);
+        errorLastName.getStyleClass().add("error-label");
+
+        Label errorEmail = new Label();
+        errorEmail.setMaxWidth(Double.MAX_VALUE);
+        errorEmail.getStyleClass().add("error-label");
+
+        Label errorRut = new Label();
+        errorRut.setMaxWidth(Double.MAX_VALUE);
+        errorRut.getStyleClass().add("error-label");
+
+        gridPane.add(new Label("Nombre de usuario"), 0,0);
+        gridPane.add(usernameTxt, 1, 0);
+        gridPane.add(errorUsername, 1,1);
+
+        gridPane.add(new Label("Nombre"), 0, 2);
+        gridPane.add(nameTxt, 1,2);
+        gridPane.add(errorName, 1,3);
+
+        gridPane.add(new Label("Apellido"), 0, 4);
+        gridPane.add(lastNameTxt, 1, 4);
+        gridPane.add(errorLastName, 1,5);
+
+        gridPane.add(new Label("Correo electrónico"), 0 , 6);
+        gridPane.add(emailTxt, 1, 6);
+        gridPane.add(errorEmail, 1, 7);
+
+        gridPane.add(new Label("Rut"), 0, 8);
+        gridPane.add(rutTxt, 1, 8);
+        gridPane.add(errorRut, 1,9);
+
+        gridPane.add(btnVolver, 0, 10);
+        gridPane.add(btnGuardar, 1, 10);
+
+        Label titutlo = new Label("Actualizar usuario");
+        titutlo.getStyleClass().add("titulo");
+
         btnVolver.setOnAction(e -> {
             NavigationController.getInstance().showListUsers();
         });
 
         btnGuardar.setOnAction(e -> {
-            System.out.println(userSelected.getId());
             try {
+                errorUsername.setText("");
+                errorName.setText("");
+                errorLastName.setText("");
+                errorEmail.setText("");
+                errorRut.setText("");
+
                 CreateUser createUser = new CreateUser(
                         usernameTxt.getText(),
                         nameTxt.getText(),
@@ -61,7 +114,33 @@ public class EditUserView {
                         emailTxt.getText(),
                         rutTxt.getText()
                 );
-                userController.updateUser(userSelected.getId(), createUser);
+                Map<String, String> errors = userController.updateUser(userSelected.getId(), createUser);
+
+                if(errors != null && !errors.isEmpty()) {
+                    for (Map.Entry<String, String> entry : errors.entrySet()) {
+                        String key = entry.getKey().replace("user.", "");
+                        String message = entry.getValue();
+
+                        switch (key) {
+                            case "username":
+                                errorUsername.setText(message);
+                                break;
+                            case "name":
+                                errorName.setText(message);
+                                break;
+                            case "lastName":
+                                errorLastName.setText(message);
+                                break;
+                            case "email":
+                                errorEmail.setText(message);
+                                break;
+                            case "rut":
+                                errorRut.setText(message);
+                                break;
+                        }
+                    }
+                    return;
+                }
 
                 tablaUsers.setItems(
                         FXCollections.observableArrayList(userController.getUsers())
@@ -70,30 +149,9 @@ public class EditUserView {
                 tablaUsers.refresh();
                 NavigationController.getInstance().showListUsers();
             }catch (Exception exception) {
-                System.out.println("Error");
+                exception.printStackTrace();
             }
         });
-
-        gridPane.add(new Label("Nombre de usuario"), 0,0);
-        gridPane.add(usernameTxt, 1, 0);
-
-        gridPane.add(new Label("Nombre"), 0, 1);
-        gridPane.add(nameTxt, 1,1);
-
-        gridPane.add(new Label("Apellido"), 0, 2);
-        gridPane.add(lastNameTxt, 1, 2);
-
-        gridPane.add(new Label("Correo electrónico"), 0 , 3);
-        gridPane.add(emailTxt, 1, 3);
-
-        gridPane.add(new Label("Rut"), 0, 4);
-        gridPane.add(rutTxt, 1, 4);
-
-        gridPane.add(btnVolver, 0, 5);
-        gridPane.add(btnGuardar, 1, 5);
-
-        Label titutlo = new Label("Actualizar usuario");
-        titutlo.getStyleClass().add("titulo");
 
         VBox root = new VBox(15);
         root.setAlignment(Pos.TOP_CENTER);

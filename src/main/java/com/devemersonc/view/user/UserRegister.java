@@ -107,7 +107,6 @@ public class UserRegister {
         //Boton registrar usuario
         btnGuardar.setOnAction(e -> {
             try {
-
                 errorUsername.setText("");
                 errorName.setText("");
                 errorLastName.setText("");

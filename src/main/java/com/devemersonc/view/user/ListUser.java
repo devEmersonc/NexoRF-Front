@@ -20,11 +20,15 @@ import java.util.Optional;
 
 public class ListUser {
     private final UserController userController = new UserController();
+    private Stage modal;
 
     public void listUsers() {
-        Stage modal = new Stage();
+        if(modal == null) {
+            modal = new Stage();
+            modal.initModality(Modality.APPLICATION_MODAL);
+        }
         modal.setTitle("Lista de usuarios");
-        modal.initModality(Modality.APPLICATION_MODAL);
+
 
         BorderPane borderPane = new BorderPane();
         borderPane.setPadding(new Insets(15));
@@ -36,8 +40,6 @@ public class ListUser {
         BorderPane.setAlignment(tablaUsers, Pos.CENTER);
 
         //ComboBox (select)
-
-
 
         //Columnas
         TableColumn<UserResponseDTO, Void> colID = new TableColumn<>("N°");
@@ -64,6 +66,25 @@ public class ListUser {
             private final HBox contenedor = new HBox(5, btnEditar, btnEliminar);
 
             {
+
+                btnEditar.setStyle("-fx-background-color: #2f6f4e; -fx-text-fill: white;");
+
+                btnEditar.setOnMouseEntered(e ->
+                        btnEditar.setStyle("-fx-background-color: #25563c; -fx-text-fill: white;")
+                );
+
+                btnEditar.setOnMouseExited(e ->
+                        btnEditar.setStyle("-fx-background-color: #2f6f4e; -fx-text-fill: white;")
+                );
+                btnEliminar.setStyle("-fx-background-color: #B22222");
+                btnEliminar.setOnMouseEntered(e ->
+                        btnEliminar.setStyle("-fx-background-color: #8B0000; -fx-text-fill: white;")
+                );
+
+                btnEliminar.setOnMouseExited(e ->
+                        btnEliminar.setStyle("-fx-background-color: #B22222; -fx-text-fill: white;")
+                );
+
                 contenedor.setAlignment(Pos.CENTER);
 
                 btnEditar.setOnAction(e -> {

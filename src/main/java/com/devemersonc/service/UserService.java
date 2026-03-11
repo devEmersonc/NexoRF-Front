@@ -32,6 +32,23 @@ public class UserService {
         return null;
     }
 
+    //Actualizar usuario
+    public Map<String, String> updateUser(Long user_id, CreateUser userUpdateDTO) throws Exception{
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/" + user_id))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + SessionManager.getToken())
+                .PUT(HttpRequest.BodyPublishers.ofString(gson.toJson(userUpdateDTO)))
+                .build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if(response.statusCode() == 400) {
+            return gson.fromJson(response.body(), new TypeToken<Map<String, String>>(){}.getType());
+        }
+        return null;
+    }
+
+
     //Obtener lista de usuarios
     public List<UserResponseDTO> getUsers() throws Exception{
         HttpRequest request = HttpRequest.newBuilder()
@@ -42,17 +59,6 @@ public class UserService {
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         return gson.fromJson(response.body(), new TypeToken<List<UserResponseDTO>>(){}.getType());
-    }
-
-    //Actualizar usuario
-    public void updateUser(Long user_id, CreateUser userUpdateDTO) throws Exception{
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + "/" + user_id))
-                .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + SessionManager.getToken())
-                .PUT(HttpRequest.BodyPublishers.ofString(gson.toJson(userUpdateDTO)))
-                .build();
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
     //Eliminar usuario

@@ -148,6 +148,15 @@ public class InventarioView {
             private HBox cont = new HBox(5, btnEditar, btnEliminar);
 
             {
+                btnEditar.setStyle("-fx-background-color: #2f6f4e; -fx-text-fill: white;");
+
+                btnEditar.setOnMouseEntered(e ->
+                        btnEditar.setStyle("-fx-background-color: #25563c; -fx-text-fill: white;")
+                );
+
+                btnEditar.setOnMouseExited(e ->
+                        btnEditar.setStyle("-fx-background-color: #2f6f4e; -fx-text-fill: white;")
+                );
                 btnEliminar.setStyle("-fx-background-color: #B22222");
                 btnEliminar.setOnMouseEntered(e ->
                         btnEliminar.setStyle("-fx-background-color: #8B0000; -fx-text-fill: white;")

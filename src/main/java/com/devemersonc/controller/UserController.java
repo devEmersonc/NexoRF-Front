@@ -20,8 +20,8 @@ public class UserController {
         return userService.getUsers();
     }
 
-    public void updateUser(Long user_id, CreateUser userUpdateDTO) throws Exception{
-        userService.updateUser(user_id, userUpdateDTO);
+    public Map<String, String> updateUser(Long user_id, CreateUser userUpdateDTO) throws Exception{
+        return userService.updateUser(user_id, userUpdateDTO);
     }
 
     public void deleteUser(Long user_id) throws Exception{
